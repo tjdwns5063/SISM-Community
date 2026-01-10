@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.seongjki.sism.domain.user.entity.User;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,5 +35,9 @@ public class AuthSession {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    public boolean isExpired(Clock clock) {
+        return expiredAt.isBefore(LocalDateTime.now(clock));
+    }
 
 }
