@@ -1,4 +1,4 @@
-package org.seongjki.sism.config;
+package org.seongjki.sism.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
