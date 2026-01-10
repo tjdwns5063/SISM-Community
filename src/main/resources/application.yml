@@ -1,0 +1,2 @@
+spring.application.name: sism
+spring.profiles.include: local
