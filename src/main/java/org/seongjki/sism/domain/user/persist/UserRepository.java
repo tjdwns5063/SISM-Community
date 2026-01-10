@@ -1,6 +1,6 @@
-package org.seongjki.sism.domain.auth.persist;
+package org.seongjki.sism.domain.user.persist;
 
-import org.seongjki.sism.domain.auth.entity.User;
+import org.seongjki.sism.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

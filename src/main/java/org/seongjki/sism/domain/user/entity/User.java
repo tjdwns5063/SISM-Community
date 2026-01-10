@@ -1,4 +1,4 @@
-package org.seongjki.sism.domain.auth.entity;
+package org.seongjki.sism.domain.user.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
