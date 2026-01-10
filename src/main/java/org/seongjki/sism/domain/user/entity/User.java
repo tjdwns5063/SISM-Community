@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.seongjki.sism.domain.user.UserRole;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +32,8 @@ public class User {
     private String phoneNumber;
 
     private String password;
+
+    private UserRole role;
 
     private LocalDateTime createdAt;
 
