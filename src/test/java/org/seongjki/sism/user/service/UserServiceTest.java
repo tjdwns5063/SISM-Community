@@ -1,4 +1,4 @@
-package org.seongjki.sism.user;
+package org.seongjki.sism.user.service;
 
 import org.junit.jupiter.api.Test;
 import org.seongjki.sism.common.HttpException;

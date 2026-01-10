@@ -66,7 +66,7 @@ public class AuthServiceTest {
                 .isNotEmpty()
                 .get()
                 .isEqualTo(UserDetailDto.builder()
-                        .id(authSession.getId())
+                        .id(user.getId())
                         .email("test@abc.com")
                         .password("1234")
                         .role(UserRole.ROLE_USER)
