@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.seongjki.sism.domain.user.entity.User;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,5 +35,15 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    public void update(String title, String content, Clock clock) {
+        if (!title.isBlank()) {
+            this.title = title;
+        }
+        if (!content.isBlank()) {
+            this.content = content;
+        }
+        updatedAt = LocalDateTime.now(clock);
+    }
 
 }
