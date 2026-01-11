@@ -15,4 +15,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByDeletedAtIsNull(Pageable pageable);
 
+    Optional<Post> findByIdAndDeletedAtIsNull(Long id);
+
 }

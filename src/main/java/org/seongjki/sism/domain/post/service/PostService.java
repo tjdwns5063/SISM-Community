@@ -78,7 +78,7 @@ public class PostService {
     }
 
     public PostDetailDto getPostDetailById(Long postId) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findByIdAndDeletedAtIsNull(postId)
                 .orElseThrow(() -> new HttpException(HttpStatusCode.valueOf(404), "해당 게시글을 찾을 수 없습니다."));
         return new PostDetailDto(
                 post.getId(),
