@@ -77,6 +77,7 @@ public class PostService {
         return posts.map(p -> new PostDto(p.getId(), p.getTitle(), p.getUser().getNickname(), p.getCreatedAt()));
     }
 
+    @Transactional(readOnly = true)
     public PostDetailDto getPostDetailById(Long postId) {
         Post post = postRepository.findByIdAndDeletedAtIsNull(postId)
                 .orElseThrow(() -> new HttpException(HttpStatusCode.valueOf(404), "해당 게시글을 찾을 수 없습니다."));
