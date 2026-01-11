@@ -2,10 +2,7 @@ package org.seongjki.sism.post.service;
 
 import org.junit.jupiter.api.Test;
 import org.seongjki.sism.domain.auth.dto.UserDetailDto;
-import org.seongjki.sism.domain.post.dto.CreatePostRequest;
-import org.seongjki.sism.domain.post.dto.PostDto;
-import org.seongjki.sism.domain.post.dto.UpdatePostRequest;
-import org.seongjki.sism.domain.post.dto.UpdatePostResponse;
+import org.seongjki.sism.domain.post.dto.*;
 import org.seongjki.sism.domain.post.entity.Post;
 import org.seongjki.sism.domain.post.persist.PostRepository;
 import org.seongjki.sism.domain.post.service.PostService;
@@ -82,6 +79,30 @@ public class PostServiceTest {
 
         //then
         assertThat(res).isEqualTo(new UpdatePostResponse(
+                post.getId(),
+                LocalDateTime.of(2026, 1, 1, 12, 30)
+        ));
+    }
+
+    @Test
+    void 게시글_삭제_성공() {
+        //given
+        User user = userRepository.save(User.builder()
+                .nickname("test")
+                .build());
+        Post post = postRepository.save(Post.builder()
+                .title("test")
+                .content("test")
+                .viewCount(0)
+                .user(user)
+                .build());
+
+        //when
+        DeletePostResponse res =  postService.delete(post.getId(),
+                new UserDetailDto(user.getId(), user.getEmail(), user.getPassword(), UserRole.ROLE_USER));
+
+        //then
+        assertThat(res).isEqualTo(new DeletePostResponse(
                 post.getId(),
                 LocalDateTime.of(2026, 1, 1, 12, 30)
         ));

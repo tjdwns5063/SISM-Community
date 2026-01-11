@@ -8,10 +8,7 @@ import org.mockito.BDDMockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.seongjki.sism.domain.auth.dto.UserDetailDto;
 import org.seongjki.sism.domain.post.controller.PostController;
-import org.seongjki.sism.domain.post.dto.CreatePostRequest;
-import org.seongjki.sism.domain.post.dto.PostDto;
-import org.seongjki.sism.domain.post.dto.UpdatePostRequest;
-import org.seongjki.sism.domain.post.dto.UpdatePostResponse;
+import org.seongjki.sism.domain.post.dto.*;
 import org.seongjki.sism.domain.post.service.PostService;
 import org.seongjki.sism.domain.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +140,41 @@ public class PostControllerTest {
                         fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                         fieldWithPath("content").type(JsonFieldType.STRING).description("게시글 내용")
                 )
+        );
+    }
+
+    @Test
+    void 게시글_삭제() throws Exception {
+        //given
+        UserDetailDto mockUser = UserDetailDto.builder()
+                .id(1L)
+                .email("user@example.com")
+                .role(UserRole.ROLE_USER)
+                .password("password")
+                .build();
+        BDDMockito.given(postService.delete(BDDMockito.anyLong(), BDDMockito.any())).willReturn(
+                new DeletePostResponse(1L, LocalDateTime.now())
+        );
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                mockUser, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/v1/post/{postId}", 1L)
+                        .with(authentication(auth)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(getPostDeleteHandler());
+
+        //then
+        BDDMockito.then(postService).should().delete(BDDMockito.anyLong(), BDDMockito.any());
+
+    }
+
+    RestDocumentationResultHandler getPostDeleteHandler() {
+        return document("post/delete",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(parameterWithName("postId").description("게시글 아이디"))
         );
     }
 
