@@ -46,4 +46,8 @@ public class Post {
         updatedAt = LocalDateTime.now(clock);
     }
 
+    public void delete(Clock clock) {
+        deletedAt = LocalDateTime.now(clock);
+    }
+
 }

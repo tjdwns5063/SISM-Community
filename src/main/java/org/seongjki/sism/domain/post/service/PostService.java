@@ -3,10 +3,7 @@ package org.seongjki.sism.domain.post.service;
 import lombok.RequiredArgsConstructor;
 import org.seongjki.sism.common.HttpException;
 import org.seongjki.sism.domain.auth.dto.UserDetailDto;
-import org.seongjki.sism.domain.post.dto.CreatePostRequest;
-import org.seongjki.sism.domain.post.dto.PostDto;
-import org.seongjki.sism.domain.post.dto.UpdatePostRequest;
-import org.seongjki.sism.domain.post.dto.UpdatePostResponse;
+import org.seongjki.sism.domain.post.dto.*;
 import org.seongjki.sism.domain.post.entity.Post;
 import org.seongjki.sism.domain.post.persist.PostRepository;
 import org.seongjki.sism.domain.user.entity.User;
@@ -58,4 +55,16 @@ public class PostService {
         return new UpdatePostResponse(post.getId(), post.getUpdatedAt());
     }
 
+    @Transactional
+    public DeletePostResponse delete(Long postId, UserDetailDto userDetailDto) {
+        User user = userRepository.findById(userDetailDto.getId())
+                .orElseThrow(() -> new HttpException(HttpStatusCode.valueOf(404), "해당 유저가 존재하지 않습니다."));
+
+        Post post = postRepository.findByIdAndUser_IdAndDeletedAtIsNull(postId, user.getId())
+                .orElseThrow(() -> new HttpException(HttpStatusCode.valueOf(404), "해당 게시글이 존재하지 않습니다."));
+
+        post.delete(clock);
+
+        return new DeletePostResponse(post.getId(), post.getDeletedAt());
+    }
 }
