@@ -6,3 +6,4 @@
 
 include::user.adoc[]
 include::auth.adoc[]
+include::post.adoc[]

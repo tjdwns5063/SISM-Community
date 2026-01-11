@@ -13,6 +13,8 @@ import org.seongjki.sism.domain.user.entity.User;
 import org.seongjki.sism.domain.user.persist.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -30,6 +32,8 @@ public class AuthServiceTest {
 
     private AuthSessionRepository authSessionRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     private Clock clock;
 
     @Autowired
@@ -38,7 +42,8 @@ public class AuthServiceTest {
         this.clock = Clock.fixed(localDateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
         this.authSessionRepository = authSessionRepository;
         this.userRepository = userRepository;
-        this.authService = new AuthService(clock, authSessionRepository, userRepository);
+        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.authService = new AuthService(clock, authSessionRepository, userRepository, passwordEncoder);
     }
 
     @Test
@@ -83,7 +88,7 @@ public class AuthServiceTest {
                 .nickname("test")
                 .name("test")
                 .email("test@abc.com")
-                .password("1234")
+                .password(passwordEncoder.encode("1234"))
                 .createdAt(LocalDateTime.now(clock))
                 .updatedAt(LocalDateTime.now(clock))
                 .phoneNumber("010-1234-5678")

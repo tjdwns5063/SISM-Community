@@ -1,0 +1,16 @@
+== Post
+
+=== 게시글 생성
+operation::post/post[snippets="http-request,http-response,request-fields"]
+
+=== 게시글 수정
+operation::post/patch[snippets="http-request,http-response,request-fields,path-parameters"]
+
+=== 게시글 삭제
+operation::post/delete[snippets="http-request,http-response,path-parameters"]
+
+=== 게시글 전체 조회
+operation::get-all-active-post/get[snippets="http-request,http-response,query-parameters"]
+
+=== 게시글 상세 조회
+operation::post-detail/get[snippets="http-request,http-response,path-parameters"]
