@@ -11,6 +11,7 @@ import org.seongjki.sism.domain.user.dto.UserDto;
 import org.seongjki.sism.domain.user.entity.User;
 import org.seongjki.sism.domain.user.persist.UserRepository;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class AuthService {
     private final AuthSessionRepository authSessionRepository;
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public Optional<UserDetailDto> authenticate(String sessionKey) {
@@ -50,6 +52,10 @@ public class AuthService {
     public SignInResponse signIn(SignInRequest request, String ipAddress, String userAgent) {
         User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new HttpException(HttpStatusCode.valueOf(404), "해당 이메일을 가진 유저가 존재하지 않습니다."));
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new HttpException(HttpStatusCode.valueOf(403), "비밀번호가 일치하지 않습니다.");
+        }
 
         AuthSession newSession = AuthSession.builder()
                 .user(user)
