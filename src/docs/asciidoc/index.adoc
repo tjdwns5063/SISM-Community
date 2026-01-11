@@ -1,0 +1,8 @@
+= 사슴 API 문서
+:doctype: book
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+include::user.adoc[]
+include::auth.adoc[]
