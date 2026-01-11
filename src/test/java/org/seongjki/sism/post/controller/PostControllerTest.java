@@ -1,6 +1,7 @@
 package org.seongjki.sism.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.sql.Update;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -9,6 +10,8 @@ import org.seongjki.sism.domain.auth.dto.UserDetailDto;
 import org.seongjki.sism.domain.post.controller.PostController;
 import org.seongjki.sism.domain.post.dto.CreatePostRequest;
 import org.seongjki.sism.domain.post.dto.PostDto;
+import org.seongjki.sism.domain.post.dto.UpdatePostRequest;
+import org.seongjki.sism.domain.post.dto.UpdatePostResponse;
 import org.seongjki.sism.domain.post.service.PostService;
 import org.seongjki.sism.domain.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -93,6 +98,51 @@ public class PostControllerTest {
                         fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
                         fieldWithPath("content").type(JsonFieldType.STRING).description("게시글 내용")
                         )
+        );
+    }
+
+    @Test
+    void 게시글_업데이트() throws Exception {
+        //given
+        UpdatePostRequest request = new UpdatePostRequest(
+                "test",
+                "test"
+        );
+        UserDetailDto mockUser = UserDetailDto.builder()
+                .id(1L)
+                .email("user@example.com")
+                .role(UserRole.ROLE_USER)
+                .password("password")
+                .build();
+        BDDMockito.given(postService.update(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any())).willReturn(
+                new UpdatePostResponse(1L, LocalDateTime.now())
+        );
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                mockUser, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/v1/post/{postId}", 1L)
+                        .with(authentication(auth))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(getPostPatchHandler());
+
+        //then
+        BDDMockito.then(postService).should().update(BDDMockito.anyLong(), BDDMockito.any(), BDDMockito.any());
+
+    }
+
+    RestDocumentationResultHandler getPostPatchHandler() {
+        return document("post/patch",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(parameterWithName("postId").description("게시글 아이디")),
+                requestFields(
+                        fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
+                        fieldWithPath("content").type(JsonFieldType.STRING).description("게시글 내용")
+                )
         );
     }
 

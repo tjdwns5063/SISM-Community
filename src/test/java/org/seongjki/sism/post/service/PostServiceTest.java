@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.seongjki.sism.domain.auth.dto.UserDetailDto;
 import org.seongjki.sism.domain.post.dto.CreatePostRequest;
 import org.seongjki.sism.domain.post.dto.PostDto;
+import org.seongjki.sism.domain.post.dto.UpdatePostRequest;
+import org.seongjki.sism.domain.post.dto.UpdatePostResponse;
+import org.seongjki.sism.domain.post.entity.Post;
 import org.seongjki.sism.domain.post.persist.PostRepository;
 import org.seongjki.sism.domain.post.service.PostService;
 import org.seongjki.sism.domain.user.UserRole;
@@ -55,6 +58,31 @@ public class PostServiceTest {
                 res.id(),
                 "test",
                 "test",
+                LocalDateTime.of(2026, 1, 1, 12, 30)
+        ));
+    }
+
+    @Test
+    void 게시글_업데이트_성공() {
+        //given
+        User user = userRepository.save(User.builder()
+                .nickname("test")
+                .build());
+        Post post = postRepository.save(Post.builder()
+                        .title("test")
+                        .content("test")
+                        .viewCount(0)
+                        .user(user)
+                .build());
+        UpdatePostRequest request = new UpdatePostRequest("test", "test");
+
+        //when
+        UpdatePostResponse res =  postService.update(post.getId(), request,
+                new UserDetailDto(user.getId(), user.getEmail(), user.getPassword(), UserRole.ROLE_USER));
+
+        //then
+        assertThat(res).isEqualTo(new UpdatePostResponse(
+                post.getId(),
                 LocalDateTime.of(2026, 1, 1, 12, 30)
         ));
     }

@@ -2,3 +2,6 @@
 
 === 게시글 생성
 operation::post/post[snippets="http-request,http-response,request-fields"]
+
+=== 게시글 수정
+operation::post/patch[snippets="http-request,http-response,request-fields,path-parameters"]
