@@ -62,14 +62,14 @@ public class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(new SignInRequest("abc@cde.com", "1234")))
                 ).andDo(print())
                 .andExpect(status().isOk())
-                .andDo(getAuthGetHandler());
+                .andDo(getAuthPostHandler());
 
         //then
         BDDMockito.then(authService).should().signIn(BDDMockito.any(), BDDMockito.any(), BDDMockito.any());
     }
 
-    RestDocumentationResultHandler getAuthGetHandler() {
-        return document("auth/get",
+    RestDocumentationResultHandler getAuthPostHandler() {
+        return document("auth/post",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
