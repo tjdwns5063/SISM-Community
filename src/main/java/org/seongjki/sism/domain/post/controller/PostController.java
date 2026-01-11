@@ -8,6 +8,7 @@ import org.seongjki.sism.domain.post.dto.CreatePostRequest;
 import org.seongjki.sism.domain.post.dto.PostDto;
 import org.seongjki.sism.domain.post.service.PostService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ApiResponse<PostDto> create(@RequestBody @Valid CreatePostRequest request, Authentication authentication) {
-        return ApiResponse.success(postService.create(request, (UserDetailDto) authentication.getPrincipal()),
+    public ApiResponse<PostDto> create(@RequestBody @Valid CreatePostRequest request, @AuthenticationPrincipal UserDetailDto principal) {
+        return ApiResponse.success(postService.create(request, principal),
                 "게시글 생성에 성공했습니다.");
     }
 

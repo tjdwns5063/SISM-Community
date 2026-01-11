@@ -1,0 +1,4 @@
+== Post
+
+=== 게시글 생성
+operation::post/post[snippets="http-request,http-response,request-fields"]
