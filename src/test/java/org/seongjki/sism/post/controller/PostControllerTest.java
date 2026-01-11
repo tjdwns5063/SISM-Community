@@ -1,7 +1,6 @@
 package org.seongjki.sism.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.sql.Update;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -9,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.seongjki.sism.domain.auth.dto.UserDetailDto;
 import org.seongjki.sism.domain.post.controller.PostController;
 import org.seongjki.sism.domain.post.dto.*;
-import org.seongjki.sism.domain.post.entity.Post;
 import org.seongjki.sism.domain.post.service.PostService;
 import org.seongjki.sism.domain.user.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,10 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
