@@ -144,4 +144,31 @@ public class PostServiceTest {
                 ));
     }
 
+    @Test
+    void 게시글_상세조회_성공() {
+        User user = userRepository.save(User.builder()
+                .nickname("test")
+                .name("test")
+                .build());
+        Post p = postRepository.save(Post.builder()
+                .title("test 0")
+                .content("test 0")
+                .user(user)
+                .createdAt(LocalDateTime.now(clock))
+                .viewCount(0)
+                .build());
+
+        //when
+        PostDetailDto res = postService.getPostDetailById(p.getId());
+
+        //then
+        assertThat(res).isEqualTo(new PostDetailDto(
+                p.getId(),
+                "test 0",
+                "test 0",
+                "test",
+                LocalDateTime.of(2026, 1, 1, 12, 30)
+        ));
+    }
+
 }

@@ -77,4 +77,16 @@ public class PostService {
         return posts.map(p -> new PostDto(p.getId(), p.getTitle(), p.getUser().getNickname(), p.getCreatedAt()));
     }
 
+    public PostDetailDto getPostDetailById(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new HttpException(HttpStatusCode.valueOf(404), "해당 게시글을 찾을 수 없습니다."));
+        return new PostDetailDto(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getUser().getNickname(),
+                post.getCreatedAt()
+        );
+    }
+
 }

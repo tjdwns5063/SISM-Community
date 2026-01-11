@@ -218,4 +218,29 @@ public class PostControllerTest {
                 ));
     }
 
+    @Test
+    void 게시글_상세조회_성공() throws Exception {
+        //given
+        BDDMockito.given(postService.getPostDetailById(BDDMockito.any())).willReturn(
+                new PostDetailDto(1L, "test 0", "test 0", "test", LocalDateTime.now())
+        );
+
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/v1/post/{postId}", 1L))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(getPostDetailGetHandler());
+
+        //then
+        BDDMockito.then(postService).should().getPostDetailById(BDDMockito.any());
+    }
+
+    RestDocumentationResultHandler getPostDetailGetHandler() {
+        return document("post-detail/get",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(parameterWithName("postId").description("게시글 id"))
+        );
+    }
+
 }

@@ -11,3 +11,6 @@ operation::post/delete[snippets="http-request,http-response,path-parameters"]
 
 === 게시글 전체 조회
 operation::get-all-active-post/get[snippets="http-request,http-response,query-parameters"]
+
+=== 게시글 상세 조회
+operation::post-detail/get[snippets="http-request,http-response,path-parameters"]

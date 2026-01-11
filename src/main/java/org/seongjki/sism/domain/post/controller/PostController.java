@@ -48,4 +48,11 @@ public class PostController {
         return ApiResponse.success(postService.getAllActivePosts(pageable), "게시글 조회에 성공했습니다.");
     }
 
+    @GetMapping("{postId}")
+    public ApiResponse<PostDetailDto> getPostDetailById(
+            @PathVariable Long postId
+    ) {
+        return ApiResponse.success(postService.getPostDetailById(postId), "게시글 상세 조회에 성공했습니다.");
+    }
+
 }
