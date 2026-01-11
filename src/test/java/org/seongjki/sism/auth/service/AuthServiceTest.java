@@ -1,11 +1,14 @@
-package org.seongjki.sism.auth;
+package org.seongjki.sism.auth.service;
 
 import org.junit.jupiter.api.Test;
+import org.seongjki.sism.domain.auth.dto.SignInRequest;
+import org.seongjki.sism.domain.auth.dto.SignInResponse;
 import org.seongjki.sism.domain.auth.dto.UserDetailDto;
 import org.seongjki.sism.domain.auth.entity.AuthSession;
 import org.seongjki.sism.domain.auth.persist.AuthSessionRepository;
 import org.seongjki.sism.domain.auth.service.AuthService;
 import org.seongjki.sism.domain.user.UserRole;
+import org.seongjki.sism.domain.user.dto.UserDto;
 import org.seongjki.sism.domain.user.entity.User;
 import org.seongjki.sism.domain.user.persist.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,20 +45,20 @@ public class AuthServiceTest {
     void 인증_성공() {
         //given
         User user = userRepository.save(User.builder()
-                        .name("test")
-                        .email("test@abc.com")
-                        .password("1234")
-                        .createdAt(LocalDateTime.now(clock))
-                        .updatedAt(LocalDateTime.now(clock))
-                        .phoneNumber("010-1234-5678")
-                        .role(UserRole.ROLE_USER)
+                .name("test")
+                .email("test@abc.com")
+                .password("1234")
+                .createdAt(LocalDateTime.now(clock))
+                .updatedAt(LocalDateTime.now(clock))
+                .phoneNumber("010-1234-5678")
+                .role(UserRole.ROLE_USER)
                 .build());
 
         AuthSession authSession = authSessionRepository.save(AuthSession.builder()
-                        .authKey("test-key")
-                        .createdAt(LocalDateTime.now(clock))
-                        .user(user)
-                        .expiredAt(LocalDateTime.now(clock).plusHours(1))
+                .authKey("test-key")
+                .createdAt(LocalDateTime.now(clock))
+                .user(user)
+                .expiredAt(LocalDateTime.now(clock).plusHours(1))
                 .build());
 
         //when
@@ -70,8 +73,37 @@ public class AuthServiceTest {
                         .email("test@abc.com")
                         .password("1234")
                         .role(UserRole.ROLE_USER)
-                .build());
+                        .build());
     }
 
+    @Test
+    void 로그인_성공() {
+        //given
+        User user = userRepository.save(User.builder()
+                .nickname("test")
+                .name("test")
+                .email("test@abc.com")
+                .password("1234")
+                .createdAt(LocalDateTime.now(clock))
+                .updatedAt(LocalDateTime.now(clock))
+                .phoneNumber("010-1234-5678")
+                .role(UserRole.ROLE_USER)
+                .build());
+        SignInRequest request = new SignInRequest("test@abc.com", "1234");
+
+        //when
+        SignInResponse res = authService.signIn(request, "127.0.0.1", "Notebook");
+
+        //then
+        assertThat(res).isEqualTo(new SignInResponse(new UserDto(
+                user.getId(),
+                "test",
+                "test@abc.com",
+                "test",
+                "010-1234-5678",
+                LocalDateTime.of(2026, 1, 1, 12, 30)
+        ), res.sessionKey()));
+        assertThat(authSessionRepository.findByUser_Id(user.getId())).isPresent();
+    }
 
 }
