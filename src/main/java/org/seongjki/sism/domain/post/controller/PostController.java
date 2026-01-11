@@ -6,6 +6,10 @@ import org.seongjki.sism.common.dto.ApiResponse;
 import org.seongjki.sism.domain.auth.dto.UserDetailDto;
 import org.seongjki.sism.domain.post.dto.*;
 import org.seongjki.sism.domain.post.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +40,12 @@ public class PostController {
         @AuthenticationPrincipal UserDetailDto principal
     ) {
         return ApiResponse.success(postService.delete(postId, principal), "게시글 삭제에 성공했습니다.");
+    }
+
+    @GetMapping
+    public ApiResponse<Page<PostDto>> getAllPosts(
+            @PageableDefault(size = 20, sort = {"createdAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return ApiResponse.success(postService.getAllActivePosts(pageable), "게시글 조회에 성공했습니다.");
     }
 
 }

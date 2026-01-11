@@ -8,6 +8,8 @@ import org.seongjki.sism.domain.post.entity.Post;
 import org.seongjki.sism.domain.post.persist.PostRepository;
 import org.seongjki.sism.domain.user.entity.User;
 import org.seongjki.sism.domain.user.persist.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,4 +69,12 @@ public class PostService {
 
         return new DeletePostResponse(post.getId(), post.getDeletedAt());
     }
+
+    @Transactional(readOnly = true)
+    public Page<PostDto> getAllActivePosts(Pageable pageable) {
+        Page<Post> posts = postRepository.findAllByDeletedAtIsNull(pageable);
+
+        return posts.map(p -> new PostDto(p.getId(), p.getTitle(), p.getUser().getNickname(), p.getCreatedAt()));
+    }
+
 }
