@@ -1,5 +1,6 @@
 package org.seongjki.sism.domain.user.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.seongjki.sism.common.dto.ApiResponse;
 import org.seongjki.sism.domain.user.dto.SignUpRequest;
@@ -18,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ApiResponse<UserDto> signUp(@RequestBody SignUpRequest signUpRequest) {
+    public ApiResponse<UserDto> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         return ApiResponse.success(userService.signUp(signUpRequest), "회원가입 성공");
     }
 

@@ -11,4 +11,8 @@ public interface AuthSessionRepository extends JpaRepository<AuthSession, Long> 
 
     Optional<AuthSession> findByAuthKey(String authKey);
 
+    Optional<AuthSession> findByUser_Id(Long userId);
+
+    boolean existsByUser_Id(Long userId);
+
 }
