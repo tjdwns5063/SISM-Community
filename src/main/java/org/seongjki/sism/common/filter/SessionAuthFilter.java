@@ -22,6 +22,12 @@ public class SessionAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         Optional<Cookie> cookie = Arrays.stream(request.getCookies())
                 .filter(c -> "SASEUM_SESSION".equals(c.getName())).findFirst();
